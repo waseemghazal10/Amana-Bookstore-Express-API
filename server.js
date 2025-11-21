@@ -27,17 +27,8 @@ app.get('/books', (req, res) => {
   res.json(booksData.books)
 })
 
-// GET route - Display a single book by ID
-app.get('/books/:id', (req, res) => {
-  const book = booksData.books.find(b => b.id === req.params.id)
-  if (!book) {
-    return res.status(404).json({ error: 'Book not found' })
-  }
-  res.json(book)
-})
-
 // GET route - Display books published between a date range
-// Usage: /books/date-range?start=2022-01-01&end=2023-12-31
+// Usage: /books/date-range/search?start=2022-01-01&end=2023-12-31
 app.get('/books/date-range/search', (req, res) => {
   const { start, end } = req.query
   
@@ -78,6 +69,27 @@ app.get('/books/featured-list', (req, res) => {
 
 // GET route - Get all reviews for a specific book
 app.get('/books/:id/reviews', (req, res) => {
+  const bookId = req.params.id
+  
+  // Check if book exists
+  const book = booksData.books.find(b => b.id === bookId)
+  if (!book) {
+    return res.status(404).json({ error: 'Book not found' })
+  }
+  
+  // Get all reviews for this book
+  const bookReviews = reviewsData.reviews.filter(review => review.bookId === bookId)
+  
+  res.json({
+    bookId: bookId,
+    bookTitle: book.title,
+    totalReviews: bookReviews.length,
+    reviews: bookReviews
+  })
+})
+
+// GET route - Display a single book by ID (MUST be last among /books routes)
+app.get('/books/:id', (req, res) => {
   const bookId = req.params.id
   
   // Check if book exists
