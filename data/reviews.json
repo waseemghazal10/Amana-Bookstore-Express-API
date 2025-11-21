@@ -109,6 +109,16 @@
       "comment": "Great integration of geophysics with climate science. The plate tectonics chapters are well-written and current.",
       "timestamp": "2024-03-08T11:40:00Z",
       "verified": true
+    },
+    {
+      "bookId": "1",
+      "author": "Jane Doe",
+      "rating": 5,
+      "title": "Great book!",
+      "comment": "Very informative and well-written.",
+      "id": "review-61",
+      "timestamp": "2025-11-21T20:59:07.583Z",
+      "verified": false
     }
   ]
 }
