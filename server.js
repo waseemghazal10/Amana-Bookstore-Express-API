@@ -57,7 +57,7 @@ app.get('/books/date-range/search', (req, res) => {
 })
 
 // GET route - Display top 10 rated books (rating * reviewCount)
-app.get('/books/top/rated', (req, res) => {
+app.get('/books/top-rated', (req, res) => {
   const booksWithScore = booksData.books.map(book => ({
     ...book,
     score: book.rating * book.reviewCount
@@ -71,7 +71,7 @@ app.get('/books/top/rated', (req, res) => {
 })
 
 // GET route - Display featured books
-app.get('/books/featured/list', (req, res) => {
+app.get('/books/featured-list', (req, res) => {
   const featuredBooks = booksData.books.filter(book => book.featured === true)
   res.json(featuredBooks)
 })
