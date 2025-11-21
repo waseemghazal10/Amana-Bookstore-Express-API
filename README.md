@@ -1,6 +1,6 @@
 # Amana Bookstore Express API
 
-Initial dataset and project structure for building a comprehensive Express.js REST API for the Amana Bookstore - a specialized academic bookstore focusing on science and educational texts.
+A fully functional RESTful API for managing an academic bookstore with books and reviews. Built with Express.js and featuring comprehensive logging and authentication.
 
 ## Project Overview
 
@@ -149,10 +149,155 @@ DELETE /api/reviews/:id        # Delete review
 5. **Testing**: Implement unit and integration tests
 6. **Deployment**: Configure for production deployment
 
+## Running the API
+
+```bash
+npm start
+```
+
+Server runs on `http://localhost:3000`
+
+## API Endpoints Implemented
+
+### GET Routes (Public - No Authentication)
+
+| Endpoint | Description | Example |
+|----------|-------------|---------|
+| `GET /books` | Get all books | `curl http://localhost:3000/books` |
+| `GET /books/:id` | Get single book by ID | `curl http://localhost:3000/books/1` |
+| `GET /books/date-range/search?start=YYYY-MM-DD&end=YYYY-MM-DD` | Get books published between dates | `curl "http://localhost:3000/books/date-range/search?start=2022-01-01&end=2023-12-31"` |
+| `GET /books/top/rated` | Get top 10 rated books (rating × reviewCount) | `curl http://localhost:3000/books/top/rated` |
+| `GET /books/featured/list` | Get all featured books | `curl http://localhost:3000/books/featured/list` |
+| `GET /books/:id/reviews` | Get all reviews for a specific book | `curl http://localhost:3000/books/1/reviews` |
+
+### POST Routes (Authentication Required)
+
+| Endpoint | Description | Headers Required |
+|----------|-------------|------------------|
+| `POST /books` | Add a new book | `Authorization: admin123`<br>`Content-Type: application/json` |
+| `POST /reviews` | Add a new review | `Authorization: admin123`<br>`Content-Type: application/json` |
+
+## Authentication
+
+POST requests require authentication token in header:
+
+```
+Authorization: admin123
+```
+
+**Valid tokens:** `admin123`, `editor456`, `manager789`
+
+## Example POST Requests
+
+### Add a New Book
+
+```bash
+curl -X POST http://localhost:3000/books \
+  -H "Authorization: admin123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Introduction to Data Science",
+    "author": "Dr. Sarah Ahmed",
+    "price": 79.99,
+    "description": "A comprehensive guide to data science",
+    "isbn": "978-1234567890",
+    "genre": ["Computer Science", "Data Science"],
+    "tags": ["Data", "Analytics"],
+    "pages": 450,
+    "language": "English",
+    "publisher": "Tech Books Publishing"
+  }'
+```
+
+### Add a Review
+
+```bash
+curl -X POST http://localhost:3000/reviews \
+  -H "Authorization: admin123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bookId": "1",
+    "author": "John Doe",
+    "rating": 5,
+    "title": "Excellent book!",
+    "comment": "Very informative and well-written."
+  }'
+```
+
+## Logging with Morgan
+
+All HTTP requests are automatically logged to `logging/log.txt` using Morgan middleware.
+
+**Log format:** Combined (Apache combined log format)
+- Includes: IP, timestamp, method, URL, status code, response time
+- Also logs to console in development mode
+
+**Example log entry:**
+```
+::1 - - [21/Nov/2025:10:30:45 +0000] "GET /books HTTP/1.1" 200 1234 "-" "PostmanRuntime/7.26.8"
+```
+
+## Deploying on Railway
+
+### Step 1: Push to GitHub
+
+```bash
+git add .
+git commit -m "Complete Express API with logging"
+git push origin main
+```
+
+### Step 2: Deploy on Railway
+
+1. Go to [railway.app](https://railway.app)
+2. Sign up/Login with GitHub
+3. Click **"New Project"**
+4. Select **"Deploy from GitHub repo"**
+5. Choose your `Amana-Bookstore-Express-API` repository
+6. Railway auto-detects Express and deploys automatically
+
+### Step 3: Configure (Optional)
+
+Railway auto-configures, but you can add environment variables:
+
+1. Go to your project dashboard
+2. Click **"Variables"** tab
+3. Add variables if needed:
+   - `PORT` (Railway sets this automatically)
+   - `AUTH_TOKENS` (if you want to use env vars)
+
+### Step 4: Test Your Live API
+
+Your API will be at: `https://your-project.railway.app`
+
+Test it:
+```bash
+curl https://your-project.railway.app/books
+curl https://your-project.railway.app/books/1
+curl https://your-project.railway.app/books/top/rated
+```
+
+## Technologies Used
+
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **Morgan** - HTTP request logging middleware
+- **File System (fs)** - Data persistence in JSON files
+
+## Features Implemented
+
+✅ 6 GET routes for retrieving books and reviews  
+✅ 2 POST routes for adding books and reviews  
+✅ Token-based authentication middleware  
+✅ Morgan logging to file and console  
+✅ Data validation and error handling  
+✅ Auto-updating book ratings when reviews are added  
+✅ JSON file persistence  
+
 ## Contributing
 
-This is an initial dataset for development purposes. The data represents a specialized academic bookstore focusing on scientific publications and educational materials.
+This is a bootcamp project for Amana Bootcamp.
 
 ## License
 
-This project is intended for educational and development purposes.
+ISC

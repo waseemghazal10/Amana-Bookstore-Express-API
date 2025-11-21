@@ -1,6 +1,7 @@
 const express = require('express')
 const fs = require('fs')
 const path = require('path')
+const morgan = require('morgan')
 
 const app = express()
 const port = 3000
@@ -9,8 +10,17 @@ const port = 3000
 const booksData = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'books.json'), 'utf8'))
 const reviewsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'reviews.json'), 'utf8'))
 
+// Create a write stream for logging
+const logStream = fs.createWriteStream(path.join(__dirname, 'logging', 'log.txt'), { flags: 'a' })
+
 // Middleware
 app.use(express.json())
+
+// Morgan logging middleware - logs all requests to log.txt
+app.use(morgan('combined', { stream: logStream }))
+
+// Also log to console for development
+app.use(morgan('dev'))
 
 // GET route - Display all books
 app.get('/books', (req, res) => {
