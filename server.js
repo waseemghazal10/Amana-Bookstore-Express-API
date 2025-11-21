@@ -28,8 +28,8 @@ app.get('/books', (req, res) => {
 })
 
 // GET route - Display books published between a date range
-// Usage: /books/date-range/search?start=2022-01-01&end=2023-12-31
-app.get('/books/date-range/search', (req, res) => {
+// Usage: /books/date-range?start=2022-01-01&end=2023-12-31
+app.get('/books/date-range', (req, res) => {
   const { start, end } = req.query
   
   if (!start || !end) {
