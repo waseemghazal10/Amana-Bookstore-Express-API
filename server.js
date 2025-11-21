@@ -47,15 +47,17 @@ app.get('/books/date-range/search', (req, res) => {
   res.json(filteredBooks)
 })
 
-// GET route - Display top 10 rated books (rating * reviewCount)
+// GET route - Display top 10 rated books (sorted by rating first, then by reviewCount)
 app.get('/books/top-rated', (req, res) => {
-  const booksWithScore = booksData.books.map(book => ({
-    ...book,
-    score: book.rating * book.reviewCount
-  }))
-  
-  const topBooks = booksWithScore
-    .sort((a, b) => b.score - a.score)
+  const topBooks = [...booksData.books]
+    .sort((a, b) => {
+      // First sort by rating (descending)
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating
+      }
+      // If ratings are equal, sort by reviewCount (descending)
+      return b.reviewCount - a.reviewCount
+    })
     .slice(0, 10)
   
   res.json(topBooks)
